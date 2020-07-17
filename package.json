@@ -9,7 +9,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "express": "^4.17.1",
+    "helmet": "^3.23.3",
+    "joi": "^17.1.1",
     "mongoose": "^5.9.24",
+    "morgan": "^1.10.0",
     "underscore": "^1.10.2"
-  }
+  },
+  "devDependencies": {}
 }
