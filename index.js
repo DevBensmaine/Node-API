@@ -2,7 +2,17 @@ const express = require("express");
 const loggin = require("./logger/logging");
 const helmet = require("helmet");
 const morgan = require("morgan"); ///logger app
+const mongoose = require("mongoose"); 
 const post = require("./posts/post");
+
+mongoose
+  .connect("mongodb://localhost/mycompany", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("Connected to database"))
+  .catch((error) => console.log(error));
+
 
 const app = new express();
 app.use(express.json());
