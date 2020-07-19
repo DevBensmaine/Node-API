@@ -2,6 +2,7 @@ const express = require("express");
 const Joi = require("@hapi/joi"); // validation
   
 const {Post} = require('../model/Post');
+const auth =  require('../middleware/auth')
 
 
 const router = express.Router();
@@ -25,7 +26,7 @@ router.get("/:id",async (req, res) => {
 
 //POST ADD Post
 
-router.post("/", async (req, res) => {
+router.post("/",auth, async (req, res) => {
   const { error } = PostValidation(res.body);
 
   if (error) {
