@@ -5,7 +5,7 @@ const morgan = require("morgan"); ///logger app
 const mongoose = require("mongoose"); 
 const post = require("./routes/post");
 const users = require("./routes/users");
-
+const auth = require("./routes/auth");
 
 mongoose
   .connect("mongodb://localhost/mycompany", {
@@ -23,6 +23,7 @@ app.use(helmet());
 //////
 app.use("/api/posts", post);
 app.use("/api/users", users);
+app.use("/api/auth", auth);
 
 ///
 
