@@ -3,7 +3,9 @@ const loggin = require("./logger/logging");
 const helmet = require("helmet");
 const morgan = require("morgan"); ///logger app
 const mongoose = require("mongoose"); 
-const post = require("./posts/post");
+const post = require("./routes/post");
+const users = require("./routes/users");
+
 
 mongoose
   .connect("mongodb://localhost/mycompany", {
@@ -13,11 +15,16 @@ mongoose
   .then(() => console.log("Connected to database"))
   .catch((error) => console.log(error));
 
+  mongoose.set('useCreateIndex', true);
 
 const app = new express();
 app.use(express.json());
 app.use(helmet());
+//////
 app.use("/api/posts", post);
+app.use("/api/users", users);
+
+///
 
 if (app.get("env") === "development") {
   app.use(morgan("tiny"));
