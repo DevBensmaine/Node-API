@@ -1,32 +1,35 @@
 const express = require("express");
 const Joi = require("@hapi/joi"); // validation
-  
-const {Post} = require('../model/Post');
-const auth =  require('../middleware/auth')
 
+const { Post } = require("../model/Post");
+const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 
 const router = express.Router();
 
-
-router.get("/",  async(req, res) => {
-  const posts = await Post.find().sort('name')
+router.get("/", async (req, res) => {
+  const posts = await Post.find().sort("name");
   res.send(posts);
 });
 
-router.get("/:id",async (req, res) => {
+router.get("/:id", async (req, res) => {
   let id = req.params.id;
-  // const postFind = posts.find((post) => post.id == id);
-  const postFind = await Post.findById(id);
+  try {
+    // const postFind = posts.find((post) => post.id == id);
+    const postFind = await Post.findById(id);
 
-  if (!postFind) {
+    if (!postFind) {
+      res.send("this post is not found !");
+    }
+    res.send(postFind);
+  } catch (error) {
     res.send("this post is not found !");
   }
-  res.send(postFind);
 });
 
 //POST ADD Post
 
-router.post("/",auth, async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const { error } = PostValidation(res.body);
 
   if (error) {
@@ -37,7 +40,7 @@ router.post("/",auth, async (req, res) => {
     userId: req.body.userId,
     title: req.body.title,
     body: req.body.body,
-  })
+  });
 
   await post.save();
   // res.send(post)
@@ -61,28 +64,32 @@ router.put("/:id", async (req, res) => {
   // }
   // postFind.title = req.body.title;
 
-  const post = await Post.findByIdAndUpdate(id , {
-    title:req.body.title
-  },{new : true})
+  const post = await Post.findByIdAndUpdate(
+    id,
+    {
+      title: req.body.title,
+    },
+    { new: true }
+  );
 
   if (!post) {
-    return res.status(404).send('INVALIDE ID');
+    return res.status(404).send("INVALIDE ID");
   }
 
   res.send(post);
 });
 
 //Delete
-router.delete("/:id",  async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   let id = req.params.id;
   // const postFind = posts.find((post) => post.id == id);
-  const postFind = await Post.findByIdAndDelete(id)
+  const postFind = await Post.findByIdAndDelete(id);
 
-  const { error } = PostValidation(res.body);
+  // const { error } = PostValidation(res.body);
 
-  if (error) {
-    return res.send(error.details[0].message);
-  }
+  // if (error) {
+  //   return res.send( error.details[0].message);
+  // }
 
   if (!postFind) {
     return res.send("this post is not found !");

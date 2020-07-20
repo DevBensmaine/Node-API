@@ -4,13 +4,19 @@ const { User, userValidation } = require('../model/User');
 const mongoose = require('mongoose')
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
-
 const jwt = require('jsonwebtoken');
+const auth =  require('../middleware/auth')
 
+
+
+///profil
+router.get("/profil",auth,async(req, res) => {
+  const profil = await User.findById(req.user._id).select('-password')
+  res.send(profil);
+});
 
 
 //regiter
-
 router.post("/", async (req, res) => {
   const { error } = userValidation(res.body);
 
